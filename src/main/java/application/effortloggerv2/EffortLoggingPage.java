@@ -11,8 +11,15 @@ import javafx.stage.Stage;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * The EffortLoggingPage class extends Application and is used for creating a JavaFX GUI.
+ * This class is part of a time tracking and effort logging application. It allows users
+ * to record the time spent on various tasks, categorized by project, life cycle, effort category,
+ * and plans.
+ */
 // Author: Aditya Jarodiya and Akshit Jain
 public class EffortLoggingPage extends Application {
+    // Declare UI elements and time tracking variables
     private Stage primaryStage;
     private Label clockStatus;
     private Button startButton;
@@ -29,16 +36,20 @@ public class EffortLoggingPage extends Application {
 
     @Override
     public void start(Stage stage) {
+        // Basic setup of the application stage
         primaryStage = stage;
         stage.setTitle("Effort Logging Page");
 
-        // Author: Mihir Kataria
+        // Initializing and setting up UI components
+        // clockStatus indicates the current state of the timer
         clockStatus = new Label("Clock is stopped");
         clockStatus.setStyle("-fx-background-color: red; -fx-padding: 5px;");
         clockStatus.setTextFill(Color.WHITE);
 
+        // Buttons for controlling the application's functionality
         startButton = new Button("Start this Activity");
 
+        // Dropdowns for selecting project, lifecycle step, effort category, and plan
         projectDropdown = new ComboBox<>();
         projectDropdown.setPromptText("Select Project");
         projectDropdown.getItems().addAll(Utility.projects);
@@ -55,14 +66,17 @@ public class EffortLoggingPage extends Application {
         plansDropdown.setPromptText("Select Plan");
         plansDropdown.getItems().addAll(Utility.plans);
 
+        // Button to stop the activity
         stopButton = new Button("Stop this Activity");
         stopButton.setDisable(true);
 
+        // TextArea for logging activities and events
         logsArea = new TextArea();
         logsArea.setEditable(false);
 
+        // Event handling for the start button
         startButton.setOnAction(e -> {
-            // Author: Mihir Kataria
+            // Validations and actions on start event
             if (projectDropdown.getValue() == null) {
                 Utility.showAlert("Empty", "Please select a project to work on", Alert.AlertType.WARNING);
                 return;
@@ -84,20 +98,19 @@ public class EffortLoggingPage extends Application {
                     "\nPlan: " + plansDropdown.getValue());
         });
 
+        // Event handling for the stop button
         stopButton.setOnAction(e -> {
-            // Author: Mihir Kataria
             clockStatus.setText("Clock is stopped");
             clockStatus.setStyle("-fx-background-color: red; -fx-padding: 5px;");
             clockStatus.setTextFill(Color.WHITE);
             startButton.setDisable(false);
             stopButton.setDisable(true);
 
-            // Stop the timer logic
+            // Stop the timer logic and calculate elapsed time
             LocalDateTime endTime = LocalDateTime.now();
-
-            // Log the end time and calculate the time taken
             long timeElapsed = calculateTimeElapsed(startTime, endTime);
 
+            // Log the end time and the duration of the activity
             log("Stopped at: " + formatTime(endTime) +
                     "\nTime taken: " + formatTime(timeElapsed) +
                     "\nProject: " + projectDropdown.getValue() +
@@ -105,7 +118,7 @@ public class EffortLoggingPage extends Application {
                     "\nEffort Category: " + effortCategoryDropdown.getValue() +
                     "\nPlan: " + plansDropdown.getValue());
 
-            // Author: Aditya Jarodiya
+            // Additional functionality to calculate and log efficiency
             double averageTimeForTask = DatabaseConnector.previousEffortsAverage(projectDropdown.getValue(), lifeCycleDropdown.getValue(),
                     effortCategoryDropdown.getValue(), plansDropdown.getValue());
             if (averageTimeForTask == 0) {
@@ -115,37 +128,50 @@ public class EffortLoggingPage extends Application {
                 log("Your efficiency for this task was " + Utility.formatAsPercentage(efficiency));
             }
 
+            // Logging the effort details in the database
             DatabaseConnector.logEffort(startTime, endTime, timeElapsed, projectDropdown.getValue(), lifeCycleDropdown.getValue(),
                     effortCategoryDropdown.getValue(), plansDropdown.getValue());
             log("Effort logged successfully.");
         });
 
+        // Buttons to view effort logs and edit tasks
         effortLogsViewButton = new Button("View Effort Logs");
         effortLogsViewButton.setOnAction(e -> Utility.openPage("effortlogdisplaypage", stage));
 
         editTasksButton = new Button("Edit Tasks");
         editTasksButton.setOnAction(e -> Utility.openPage("taskeditorpage", stage));
 
+        // Button for logging out of the application
         Button logOutButton = new Button("Log Out");
         logOutButton.setOnAction(e -> Utility.openPage("loginpage", stage));
 
+        // HBox and VBox for layout management
         HBox hbox = new HBox(10);
         hbox.getChildren().addAll(effortLogsViewButton, editTasksButton, logOutButton);
 
         VBox root = new VBox(10);
         root.getChildren().addAll(clockStatus, startButton, projectDropdown, lifeCycleDropdown, effortCategoryDropdown, plansDropdown,  stopButton, logsArea, hbox);
 
+        // Scene setup for the primary stage
         Scene scene = new Scene(root, 400, 400);
         stage.setScene(scene);
     }
 
-    // Author: Mihir Kataria
+    /**
+     * Formats a LocalDateTime object into a string representation.
+     * @param time LocalDateTime object to be formatted.
+     * @return String representing formatted date and time.
+     */
     private String formatTime(LocalDateTime time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return time.format(formatter);
     }
 
-    // Author: Mihir Kataria
+    /**
+     * Formats a duration in seconds into a string representation of hours, minutes, and seconds.
+     * @param seconds Duration in seconds to be formatted.
+     * @return String representing the formatted duration.
+     */
     private String formatTime(long seconds) {
         long hours = seconds / 3600;
         long minutes = (seconds % 3600) / 60;
@@ -154,11 +180,20 @@ public class EffortLoggingPage extends Application {
         return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
     }
 
-    // Author: Mihir Kataria
+    /**
+     * Calculates the time elapsed between two LocalDateTime objects in seconds.
+     * @param startTime Start time of the activity.
+     * @param endTime End time of the activity.
+     * @return Duration in seconds between startTime and endTime.
+     */
     private long calculateTimeElapsed(LocalDateTime startTime, LocalDateTime endTime) {
         return startTime.until(endTime, java.time.temporal.ChronoUnit.SECONDS);
     }
 
+    /**
+     * Appends a log entry to the TextArea component.
+     * @param logEntry String containing the information to be logged.
+     */
     private void log(String logEntry) {
         logsArea.appendText("\n\n" + logEntry);
     }
