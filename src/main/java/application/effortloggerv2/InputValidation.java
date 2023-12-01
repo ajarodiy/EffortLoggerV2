@@ -5,11 +5,20 @@ package application.effortloggerv2;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// This class is designed to handle input validation and sanitization.
-
+/**
+ * The InputValidation class is designed to handle input validation and sanitization
+ * to ensure the security and integrity of user input in the Effort Logger application.
+ */
 public class InputValidation {
-    // Sanitize the input to remove potential security risks
+
+    /**
+     * Sanitize the input to remove potential security risks.
+     *
+     * @param input The input string to be sanitized.
+     * @return A sanitized version of the input string.
+     */
     public static String sanitize(String input) {
+        // Check for null input
         if (input == null) {
             return "";
         }
@@ -26,7 +35,12 @@ public class InputValidation {
         return input;
     }
 
-    // Additional custom validation checks (not used currently)
+    /**
+     * Additional custom validation checks (not used currently).
+     *
+     * @param input The input string to be validated.
+     * @return True if the input passes all validation checks, false otherwise.
+     */
     private static boolean isValidInput(String input) {
         // Validate that the input contains only letters, numbers, and some special characters
         // Add more validation checks as needed
