@@ -14,8 +14,6 @@ public class DatabaseConnector {
 
 	// Database connection parameters
 	private static final String dbHost = "aws.connect.psdb.cloud";
-	private static final String dbUsername = "wi9tyjj4kfjmu2g5b7f6";
-	private static final String dbPassword = "pscale_pw_NZp8UREkjyS4tz9QyMAfDFJ9CqnIgmRuItYD4AdFdpI";
 	private static final String dbName = "cse360project";
 
 	// JDBC Connection object
@@ -25,8 +23,8 @@ public class DatabaseConnector {
 	static {
 		// Set database connection properties
 		Properties props = new Properties();
-		props.setProperty("user", dbUsername);
-		props.setProperty("password", dbPassword);
+		props.setProperty("user", Utility.dbUsername);
+		props.setProperty("password", Utility.dbPassword1 + Utility.dbPassword2 + Utility.dbPassword3);
 		props.setProperty("useSSL", "true");
 
 		try {

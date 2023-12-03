@@ -19,7 +19,7 @@ public class LoginPage extends Application {
 	public void start(Stage stage) {
 		try {
 			this.primaryStage = stage;
-	        
+
 			primaryStage.setTitle("EffortLogger Login Page");
 	        // Create a grid for the login form
 	        GridPane grid = new GridPane();
@@ -79,7 +79,7 @@ public class LoginPage extends Application {
 		}
 	}
 
-	
+
 	public static void main(String[] args) {
 		DatabaseConnector.loadLists();
 		launch(args);

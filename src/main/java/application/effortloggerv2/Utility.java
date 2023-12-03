@@ -82,4 +82,9 @@ public class Utility {
         percentFormat.setMinimumFractionDigits(2);
         return percentFormat.format(value);
     }
+
+    public static String dbUsername = "lewtn53opij8mfwl0m41";
+    public static String dbPassword1 = "pscale_pw_Q5Er";
+    public static String dbPassword2 = "oCN9ClpstdMb1MSRRqt";
+    public static String dbPassword3 = "ErXaZTxS5xUFT0G9jkm3";
 }
